@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title>Menghitung Paragraf</title>
+    Ditinggal mudik hah!
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript">
+    function hitung()
+        {
+            alert("Ada sebanyak" + $("p").size() + "paragraf.");
+        }
+    </script>
+    
+</head>
+<body>
+    <h1>Menghitung Paragraf</h1>
+    <div>
+    <p>INi paragraph 1.</p>
+    <p>Ini paragraph 2.</p>
+    <p>Ini paragraph 3.</p>
+    <p>Ini paragraph 4.</p>
+    </div>
+    <form>
+        <input type="button" value="Hitung Paragraf" onclick="hitung()">
+    </form>
+</body>
+</html>
