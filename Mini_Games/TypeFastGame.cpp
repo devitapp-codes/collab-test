@@ -1,3 +1,7 @@
+//Berkedip-kedip ketika di clearscreen, Kalo Ada Punya Solusi  yang lain selain clearscreen,
+//bisa Di bantu,, di fungsi Void Draw
+//this code is bad programming technique, masih asal-asalan..
+//yang mau edit monggo...
 
 #include <iostream>
 #include <ctime>
@@ -16,11 +20,12 @@ struct tm *localTime;
 int benar;
 int countdown;
 int salah;
-char ketik[100][64];
+char ketik[99][64];
+int   mulai;
 int data=0;
 int kata=1;
 int colour[16];
-int warnahuruf[20][20];
+int warnahuruf[100][100];
 int bestscore[5];
 struct {
     string name;
@@ -28,15 +33,19 @@ struct {
 } person[100];
 
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-char teks [25][64] = {"ketika ","kamu ","setiap ","aku ","jangan ","kelas ","bagi ","sedap ",
+char teks [35][64] = {"ketika ","kamu ","setiap ","aku ","jangan ","kelas ","bagi ","sedap ",
                       "makan ","siang ","dari ","tadi ","kamu ","cantik ","sekali ","diam ","tanpa ",
                       "kata ","selalu ","pada ","terima ","dewa ","nanda ","keren ","sekali "
+                      ,"main ","kemari ","sayang ","libur ","berenang ","tetapi ","wabrazyah ",
+                      "makan ","omteloletom ","uvuvwevwev "
                      };
-int random[15];
+int random[100];
 void sorting ();
 void randomarray();
 void draw ();
+void win();
 void input(int );
+//void clearbox();
 //void setup();
 void logic();
 void submitscore(double s);
@@ -47,14 +56,13 @@ int main  () {
 
 
 
-
     srand(time(0));
     int pil;
     do {
-        countdown=15;
+        countdown=30;
 
-        for (int a=0; a<=15; a++) {
-            for(int b=0; b<=15; b++) {
+        for (int a=0; a<=100; a++) {
+            for(int b=0; b<=100; b++) {
                 warnahuruf[a][b]=7;
             }
         }
@@ -72,15 +80,22 @@ int main  () {
         cin>>pil;
         switch (pil) {
 
-          case 4 : system("cls");
-          cout<<"New Feature "<<endl;
-          cout<<"- Timeout Added"<<endl;
-          cout<<"- Menggunakan spasi setelah kata di ketik "<<endl;
-          cout<<"- Setiap huruf highlighted jika huruf yang anda masukan benar"<<endl;
+        case 4 :
+            system("cls");
+            cout<<"New Update"<<endl<<endl;
+            cout<<"Fix some bugs : "<<endl;
+            cout<<"- Warna huruf kembali ke default jika dibackspace"<<endl;
+            cout<<"- Fix Countdown time"<<endl;
+
+            cout<<endl;
+            cout<<"New Feature : "<<endl;
+            cout<<"- Timeout Added"<<endl;
+            cout<<"- Menggunakan spasi setelah kata di ketik "<<endl;
+            cout<<"- Setiap huruf highlighted jika huruf yang anda masukan benar"<<endl;
 
 
-          getch();
-          break;
+            getch();
+            break;
 
         case 2 :
 
@@ -108,15 +123,22 @@ int main  () {
 
         case 3 :
             system("cls");
-            cout<<"How to play : \nKetik kalimat per kata yang tetera pada layar, lalu tekan spasi ";
-            cout<<"\njika teks berubah menjadi hijau berarti teks yang anda masukan benar ";
-            cout<<"\ndan merah jika salah, jika waktu habis maka game selesai";
+            cout<<"How to play : \nKetik kalimat per kata yang tetera pada layar, lalu tekan spasi, ";
+            cout<<"\njika teks berubah menjadi hijau berarti teks yang anda masukan benar, ";
+            cout<<"\ndan merah jika salah, jika waktu habis maka game selesai.";
+            cout<<"\nCan You Type All Words? ";
 
             getch();
             break;
 
 
         case 1 :
+
+
+            time( &currentTime );
+            localTime = localtime( &currentTime );
+
+            mulai   = localTime->tm_sec;
 
 
 
@@ -137,10 +159,10 @@ int main  () {
             cout<<"Teks Yang Salah Diketik : "<<salah<<endl;
 
 
-if (countdown==0)countdown++;
+            if (countdown==0)countdown++;
 
 
-            float score = (benar*countdown*100)/15-(salah*2);
+            float score = (benar*countdown*100)/15-(salah*4);
             cout<<"SCORE :  "<<score<<endl<<endl;
 
             cout<<"1. Submit Score"<<endl;
@@ -160,8 +182,8 @@ if (countdown==0)countdown++;
 }
 
 void randomarray() {
-    for (int a=0; a<=15; a++) {
-        random[a]=rand()%25;
+    for (int a=0; a<=100; a++) {
+        random[a]=rand()%35;
     }
 }
 
@@ -175,11 +197,10 @@ void randomarray() {
 
 void draw () {
 
-
     system("cls");
 
 
-    for (int a=1; a<=15; a++) {
+    for (int a=1; a<=30; a++) {
         for (int b = 0; b<strlen(teks[random[a]]); b++) {
 
             SetConsoleTextAttribute(hConsole, warnahuruf[a][b] );
@@ -191,7 +212,7 @@ void draw () {
         //cout<<" ";
 
 
-        if(a==8)cout<<endl;
+        if(a%8==0)cout<<endl;
     }
     SetConsoleTextAttribute(hConsole, 7 );
 
@@ -205,55 +226,75 @@ void draw () {
 }
 
 void logic () {
-int a=1;
+    int a=1;
     bool selesai;
     bool gameover=true;
 
-string hasil;
+    string hasil;
     while(gameover) {
         selesai=true;
-int b=0;
+        int b=0;
         while(selesai) {
 
-                if (countdown==0){selesai=false;
-                gameover=false;}
-if (a==15)gameover=false;
+            if (countdown==0) {
+                selesai=false;
+                gameover=false;
+            }
+            if (a==30 ) {
+                win();
+                gameover=false;
+            }
 
 
             draw();
+
+            time( &currentTime );
+            localTime = localtime( &currentTime );
+
+            int    out    = localTime->tm_sec;
+
             input(a);
 
+            if (mulai!=out) {
+                countdown-- ;
+                mulai++;
+                if (mulai>59)mulai==1;
+            }
 
 
-       if (ketik[kata][b]=='\0'){
-            b--;
 
-        }
+            if (ketik[kata][b]=='\0' &&ketik[kata][b-1]=='\0' && b!=0) {
+                b--;
+
+            }
+            if (ketik[kata][b]=='\0') {
+                b--;
+
+            }
 
 
             if (ketik[kata][b] == teks [random[a]][b]) {
 
-            warnahuruf[a][b]=15;
-        }
-
-
-hasil=ketik[kata];
-if (ketik[kata][b]==' ' ||ketik[kata][b]=='\n' )selesai=false;
-
-        b++;
-
+                warnahuruf[a][b]=15;
             }
-            if (hasil==teks[random[a]]) {
-                for(int b=strlen(teks[random[a]]); b>=0; b--)
-                    warnahuruf[a][b]=10;
 
 
-                benar++;
+            hasil=ketik[kata];
+            if (ketik[kata][b]==' ' ||ketik[kata][b]=='\n' )selesai=false;
+
+            b++;
+
         }
-        else {
-        for(int b=strlen(teks[random[a]]); b>=0; b--)
-                    warnahuruf[a][b]=12;
-                    salah++;
+        if (hasil==teks[random[a]]) {
+            for(int b=strlen(teks[random[a]]); b>=0; b--)
+                warnahuruf[a][b]=10;
+
+
+            benar++;
+        } else {
+            for(int b=strlen(teks[random[a]]); b>=0; b--)
+                warnahuruf[a][b]=12;
+            salah++;
         }
 
 
@@ -274,7 +315,7 @@ void input (int a) {
     time( &currentTime );
     localTime = localtime( &currentTime );
 
-    int out    = localTime->tm_sec;
+    int    out    = localTime->tm_sec;
     int len=strlen(ketik[kata]);
 
     while (keluar) {
@@ -307,7 +348,7 @@ void input (int a) {
         if (out!=out2) {
             keluar=false;
 
-            countdown--;
+
         }
     }
 
@@ -353,3 +394,16 @@ void sorting () {
 
 }
 
+void win () {
+
+
+    if (benar==30) {
+            system("cls");
+        cout<<"Congratulatiaon...! Your'e The Fastest Type In The World "<<endl;
+
+    }
+
+
+
+
+}
