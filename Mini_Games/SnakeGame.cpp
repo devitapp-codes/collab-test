@@ -1,8 +1,8 @@
-//STILL NOTHING..
+//Flikering Screen Is Fix....
 
-// clearsreen is annoying..
+//gotoxy its really helpfull..
 
-// Edit Sesukamu ..
+//kurang ekornya aja,, masih binggung wwkwkk,,,
 
 #include <iostream>
 #include <conio.h>
@@ -18,7 +18,21 @@ const int panjang =20;
 const int lebar =20;
 
 
-class snake {
+class Food
+{
+
+public :
+
+  char bigfood='O';
+  char food='o';
+
+  int x;
+  int y;
+
+
+};
+
+class Snake {
 
 
 public :
@@ -27,20 +41,27 @@ public :
     int y;
 
 
-}s;
-int foodx;
-int foody;
-char food;
+};
+
 bool gameover;
 char key;
+double speed;
+int score;
+char tail;
+int tails[100];
+int jumlahtails;
+Snake snake;
+Food food;
+
 
 
 void draw ();
 void setup();
 void input();
 void logic ();
+void gotoxy(int x, int y);
 void menu ();
-bool maps (int a, int b);
+void maps ();
 void play();
 bool snakepos(int a,int b);
 
@@ -61,17 +82,20 @@ play();
 
 void setup() {
 
+maps();
 gameover=true;
+speed=100;
+jumlahtails=0;
+score=0;
+    snake.snake='^';
 
-    s.snake='^';
-    food = 'o';
-    s.y=panjang/2;
-    s.x=lebar/2;
-    foody = rand()%panjang;
-    foodx = rand()%lebar;
+    snake.y=panjang/2;
+    snake.x=lebar/2;
+    food.x = rand()%panjang-1;
+    food.y = rand()%lebar-1;
 
-    if (foody<2 )foody+2;
-    if (foodx<2)foodx+2;
+    if (food.x<2 )food.x+=2;
+    if (food.y<2)food.y+=2;
 
 }
 
@@ -90,34 +114,31 @@ void play()
 }
 
 void draw () {
-    system ("cls");
-
-
-    for (int a=1; a<=panjang; a++) {
-        for (int b=1; b<=lebar; b++) {
-            if (maps(a,b)  )
-                cout<<"#";
-
-            else if (snakepos(a,b))
-                cout<<s.snake;
-
-
-            else if (a==foody && b==foodx)
-                cout<<food;
 
 
 
+//system("cls");
+
+
+             gotoxy(snake.x,snake.y);
+
+                cout<<snake.snake;
+
+
+            gotoxy(food.x,food.y);
+            if(rand()%10==5)
+                cout<<food.bigfood;
+            else cout<<food.food;
 
 
 
-            else cout<<" ";
 
-        }
-        cout<<endl;
 
-    }
-cout<<"W A S D To Move ";
 
+gotoxy(panjang+2 , 0);
+cout<<"SCORE : "<<score;
+gotoxy(panjang+5 , 10);
+cout<<" W A S D To Move";
 
 }
 
@@ -127,29 +148,66 @@ void logic()
 {
 
     if (key==72 || key=='w'){
-            s.y--;
+            gotoxy(snake.x,snake.y);
+            cout<<" ";
+            snake.y--;
+            snake.snake='^';
 
         }
             else if (key==80 || key=='s'){
-                s.y++;
+ gotoxy(snake.x,snake.y);
+            cout<<" ";
+                snake.y++;
+                snake.snake ='v';
+
 
             }
 
             else if (key==75 || key=='a')
-            {
+            {gotoxy(snake.x,snake.y);
+            cout<<" ";
 
-                s.x--;
+                snake.x--;
+                snake.snake='<';
             }
 
             else if (key==76 || key=='d')
-            {
-                s.x++;
+            {gotoxy(snake.x,snake.y);
+            cout<<" ";
+                snake.x++;
+                snake.snake='>';
             }
 
             else if (key==27)
             {
                 gameover=false;
             }
+
+
+    if (snake.x == food.x && snake.y == food.y)
+    {
+        jumlahtails++;
+        food.x=rand()%lebar-1;;
+        food.y=rand()%panjang-1;;
+
+        if (food.y<2 )food.y+=2;
+    if (food.x<2)food.x+=2;
+        score+=10;
+
+        speed-=1;
+    }
+
+
+if (snake.x==lebar-1)
+snake.x=1;
+
+if (snake.y==panjang-1)
+snake.y=1;
+if (snake.x==0)
+snake.x=lebar-2;
+
+if(snake.y==0)
+snake.y=panjang-2;
 
 
 
@@ -174,6 +232,9 @@ void input()
 
         }
 
+        Sleep(speed);
+        input=false;
+
 
 
     }
@@ -181,20 +242,39 @@ void input()
 }
 
 
-bool maps (int a,int b) {
-    if (a==1 || b==1 || a==panjang || b==lebar)
-        return true;
+void maps () {
 
-    else return false;
+for (int a=0;a<panjang;a++){
+
+    for (int b=0;b<lebar;b++)
+    {
+
+
+
+    if (a==0|| b==0 || a==panjang-1 || b==lebar-1)
+        cout<<"#";
+        else cout<<" ";
+
+}cout<<endl;
+}
+cout<<endl<<endl;
 
 }
-
 bool snakepos (int a, int b) {
 
 
 
-    if (a==s.y &&  b ==s.x)
+    if (a==snake.y &&  b ==snake.x)
         return true;
 
     else return false;
+}
+
+
+void gotoxy(int x, int y)
+{
+  COORD coord;
+  coord.X = x;
+  coord.Y = y;
+  SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
